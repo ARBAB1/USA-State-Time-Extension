@@ -61,8 +61,8 @@ public/
 ## Technology Stack
 - React: UI framework
 - Vite: Fast build tool
-- Material-UI: UI components for React
-- Moment.js: Time management library
+- [Material-UI](https://mui.com/): UI components for React
+- [Moment.js](https://momentjs.com/): Time management library
 
 ## License
 This project is licensed under the MIT License. Feel free to use and modify it as per your needs.
