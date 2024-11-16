@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Time of USA",
+    "version": "1.0",
+    "description": "Displays the current time for USA states with a search feature.",
+    "action": {
+      "default_popup": "index.html",
+      "default_title": "Time of USA"
+    },
+    "icons": {
+      "16": "src/assets/icons/16x16.png",
+      "48": "src/assets/icons/48x48.png",
+      "128": "src/assets/icons/128x128.png",
+      "32": "src/assets/icons/32x32.png"
+    },
+    "permissions": []
+  }
+  
