@@ -65,7 +65,7 @@ public/
 - [Moment.js](https://momentjs.com/): Time management library
 
 ## License
-This project is licensed under the MIT License. Feel free to use and modify it as per your needs.
+This project is licensed under the ![MIT License](./LICENSE). Feel free to use and modify it as per your needs.
 
 ## Contributing
 Contributions are welcome! Please fork this repository and submit a pull request with your enhancements or fixes.
