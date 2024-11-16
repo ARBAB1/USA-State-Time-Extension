@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, TextField, Typography } from '@mui/material'; // For layout and heading
+import { Box, TextField, Typography, Button } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -12,8 +12,11 @@ import moment from 'moment';
 
 function App() {
   const [stateTime, setStateTime] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // For storing the search query
-  const [filteredStates, setFilteredStates] = useState([]); // For filtered states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [selectedState, setSelectedState] = useState(
+    JSON.parse(localStorage.getItem('selectedState')) || null
+  );
 
   // Initialize state with the initial times
   useEffect(() => {
@@ -34,10 +37,20 @@ function App() {
           Time: moment(item.Time).add(1, 'second').toDate(),
         }))
       );
+
+      // Update the selected state's time dynamically if it exists
+      if (selectedState) {
+        const updatedSelectedState = {
+          ...selectedState,
+          Time: moment(selectedState.Time).add(1, 'second').toDate(),
+        };
+        setSelectedState(updatedSelectedState);
+        localStorage.setItem('selectedState', JSON.stringify(updatedSelectedState));
+      }
     }, 1000);
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
+  }, [selectedState]);
 
   // Update the filtered list when the search query changes
   useEffect(() => {
@@ -48,6 +61,18 @@ function App() {
     );
     setFilteredStates(filtered);
   }, [searchQuery, stateTime]);
+
+  // Save selected state to local storage and state
+  const handleSelectState = (state) => {
+    setSelectedState(state);
+    localStorage.setItem('selectedState', JSON.stringify(state));
+  };
+
+  // Clear the selected state from local storage and state
+  const handleClearSelection = () => {
+    setSelectedState(null);
+    localStorage.removeItem('selectedState');
+  };
 
   // Determine if the time is daytime or nighttime
   const isDayTime = (time) => {
@@ -68,6 +93,49 @@ function App() {
       <Typography variant="h4" gutterBottom>
         Time of USA
       </Typography>
+      {selectedState && (
+        <Box
+          sx={{
+            mb: 3,
+            p: 2,
+            border: '1px solid',
+            borderRadius: 2,
+            boxShadow: 2,
+            textAlign: 'center',
+            maxWidth: '600px',
+            width: '100%',
+          }}
+        >
+          <Typography variant="h6">Selected State</Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="body1">
+              {selectedState.stateName}:{' '}
+              {moment(selectedState.Time).format('YYYY-MM-DD h:mm:ss A')}
+            </Typography>
+            <Avatar sx={{ ml: 2 }}>
+              {isDayTime(selectedState.Time) ? (
+                <WbSunnyIcon color="warning" /> // Sun icon for daytime
+              ) : (
+                <NightsStayIcon color="primary" /> // Moon icon for nighttime
+              )}
+            </Avatar>
+          </Box>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClearSelection}
+            sx={{ mt: 2 }}
+          >
+            Clear Selection
+          </Button>
+        </Box>
+      )}
       <TextField
         fullWidth
         margin="normal"
@@ -101,6 +169,13 @@ function App() {
               primary={item?.stateName}
               secondary={moment(item?.Time).format('YYYY-MM-DD h:mm:ss A')}
             />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleSelectState(item)}
+            >
+              Select
+            </Button>
           </ListItem>
         ))}
       </List>
